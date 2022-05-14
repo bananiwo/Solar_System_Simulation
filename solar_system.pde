@@ -21,13 +21,13 @@ void setup() {
   emissive(0, 0, 0);
   sun.createMoons(2, 2);
   myPlanet = sun.children[0];
-  myPlanet.createMoons(4, 2);
+  myPlanet.createMoons(20, 4);
   noStroke();
 }
 
 void draw() {
   background(0);
-  ambientLight(195, 195, 195);
+  ambientLight(100, 100, 100);
   pointLight(200, 200, 200, 0, 0, 0);
   sun.show();
   //sun.orbit();
