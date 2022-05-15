@@ -1,4 +1,4 @@
-class Planet {
+class Planet { //<>//
 
   float radius;
   float distance;
@@ -7,9 +7,12 @@ class Planet {
   float speed;
   PVector v;
   PShape globe;
+  boolean hasLight = false;
+  boolean showLine = false;
   Planet[] children;
+  Asteroid[] asteroids;
 
-  Planet(float radius, float distance, float speed, PImage img) {
+  Planet(float radius, float distance, float speed, PImage texture) {
     v = PVector.random3D();
     this.radius = radius;
     this.distance = distance;
@@ -19,7 +22,7 @@ class Planet {
     noStroke();
     noFill();
     globe = createShape(SPHERE, radius);
-    globe.setTexture(img);
+    globe.setTexture(texture);
   }
 
   void createMoons(int amount, int level) {
@@ -28,7 +31,7 @@ class Planet {
       float r = radius / level;
       float d = random(2*(radius + r), 4*(radius + r));
       int index = (int)random(0, textures.length);
-      children[i] = new Planet(r, d, random(-0.03, 0.03), textures[index]);
+      children[i] = new Planet(r, d, random(-0.003, 0.003), textures[index]);
       if (level < 3) {
         children[i].createMoons((int)random(1, 4), level + 1);
         children[i].createMoons(3, level+1);
@@ -36,50 +39,70 @@ class Planet {
     }
   }
 
-  void createAsteroids(int amount, float radius) {
-    children = new Planet[amount];
+  void createAsteroids(int amount, float scale) {
+    asteroids = new Asteroid[amount];
     for (int i = 0; i < amount; i++) {
-      float d = random(100, 200);
-      int index = (int)random(0, textures.length);
-      children[i] = new Planet(radius, d, random(-0.03, 0.03), textures[index]);
+      float d = random(50, 60);
+      asteroids[i] = new Asteroid(scale, d, random(0.005, 0.01), loadShape("data/satellite_obj.obj"));
     }
   }
 
-    void show() {
-      pushMatrix();
-      fill(255);
-      PVector v2 = new PVector(1, 0, 1);
-      PVector p = v.cross(v2);
-      rotate(fi, p.x, p.y, p.z);
-      //line(0, 0, 0, v.x, v.y, v.x);
-      //line(0, 0, 0, p.x, p.y, p.x);
-      noStroke();
-      translate(v.x, v.y, v.z);
-      shininess(0.1);
-      //specular(255, 0, 255);
-      shape(globe);
-      if (children != null) {
-        for (int i = 0; i < children.length; i++) {
-          children[i].show();
-        }
-      }
-      popMatrix();
+  void show() {
+    pushMatrix();
+    fill(255);
+    PVector v2 = new PVector(1, 0, 1);
+    PVector p = v.cross(v2);
+    rotate(fi, p.x, p.y, p.z);
+
+    noStroke();
+    translate(v.x, v.y, v.z);
+    if (hasLight) {
+      reflector();
     }
+    //shininess(1.0);
+    specular(255, 255, 0);
+    shape(globe);
+    if (children != null) {
+      for (int i = 0; i < children.length; i++) {
+        children[i].show();
+      }
+    }
+    if (asteroids != null) {
+      for (int i = 0; i < asteroids.length; i++) {
+        asteroids[i].show();
+      }
+    }
+    popMatrix();
+  }
 
-    void orbit() {
-      pushMatrix();
-      fi += speed;
-      //float b = 100; // mniejsza srednica
-      //float e = 0.8; // wspolczynnik ksztaltu CHYBA
-      //distance = b / sqrt(1 - sq(e*cos(fi)));
-      //distance = a*(1-e*e)/(1-e*cos(fi));
-      //distance = 50 * sqrt(16 / (sq(cos(fi)) + 4*sq(sin(fi)))); // sun is orbit's focal point
-      popMatrix();
+  void orbit() {
+    fi += speed;
 
-      if (children != null) {
-        for (int i = 0; i < children.length; i++) {
-          children[i].orbit();
-        }
+    if (children != null) {
+      for (int i = 0; i < children.length; i++) {
+        children[i].orbit();
+      }
+    }
+    if (asteroids != null) {
+      for (int i = 0; i < asteroids.length; i++) {
+        asteroids[i].orbit();
       }
     }
   }
+
+  void setTexture(PImage texture) {
+    globe.setTexture(texture);
+  }
+
+  void reflector() {
+    PVector lightDir = v.copy();
+    lightDir.normalize();
+    PVector lightPos = PVector.mult(lightDir, -radius);
+    PVector lightEndpoint = PVector.mult(lightDir, -2*radius);
+    //stroke(30, 30, 0);
+    //line(lightPos.x, lightPos.y, lightPos.z, lightEndpoint.x, lightEndpoint.y, lightEndpoint.z);
+    lightSpecular(0, 204, 255);
+    lightFalloff(1.0, 0.01, 0.0);    
+    spotLight(0, 204, 255, lightPos.x, lightPos.y, lightPos.z, lightEndpoint.x, lightEndpoint.y, lightEndpoint.z, PI, 2);
+  }
+}
