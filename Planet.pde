@@ -21,6 +21,8 @@ class Planet { //<>//
     fi = random(TWO_PI);
     noStroke();
     noFill();
+    shininess(random(0, 1.0));
+    specular(random(0, 255));
     globe = createShape(SPHERE, radius);
     globe.setTexture(texture);
   }
@@ -39,11 +41,11 @@ class Planet { //<>//
     }
   }
 
-  void createAsteroids(int amount, float scale) {
+    void createAsteroids(int amount, PShape shape) {
     asteroids = new Asteroid[amount];
     for (int i = 0; i < amount; i++) {
       float d = random(50, 60);
-      asteroids[i] = new Asteroid(scale, d, random(0.005, 0.01), loadShape("data/satellite_obj.obj"));
+      asteroids[i] = new Asteroid(d, random(0.005, 0.01), shape);
     }
   }
 
@@ -59,8 +61,6 @@ class Planet { //<>//
     if (hasLight) {
       reflector();
     }
-    //shininess(1.0);
-    specular(255, 255, 0);
     shape(globe);
     if (children != null) {
       for (int i = 0; i < children.length; i++) {
@@ -99,10 +99,9 @@ class Planet { //<>//
     lightDir.normalize();
     PVector lightPos = PVector.mult(lightDir, -radius);
     PVector lightEndpoint = PVector.mult(lightDir, -2*radius);
-    //stroke(30, 30, 0);
+    //stroke(255, 0, 0);
     //line(lightPos.x, lightPos.y, lightPos.z, lightEndpoint.x, lightEndpoint.y, lightEndpoint.z);
-    lightSpecular(0, 204, 255);
-    lightFalloff(1.0, 0.01, 0.0);    
+    lightFalloff(1.0, 0.01, 0.0);
     spotLight(0, 204, 255, lightPos.x, lightPos.y, lightPos.z, lightEndpoint.x, lightEndpoint.y, lightEndpoint.z, PI, 2);
   }
 }

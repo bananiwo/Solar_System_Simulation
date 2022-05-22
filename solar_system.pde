@@ -5,6 +5,7 @@ Planet myPlanet;
 PImage[] textures = new PImage[4];
 PImage tex_earth;
 PImage textureSun;
+PShape satellite;
 PeasyCam cam;
 
 void setup() {
@@ -16,6 +17,8 @@ void setup() {
   textures[2] = loadImage("data/texture_planet_3.png");
   textures[3] = loadImage("data/texture_planet_4.jpg");
   tex_earth = loadImage("data/texture_earth.jpg");
+  satellite = loadShape("data/Satellite.obj");
+  satellite.scale(0.7);
 
   emissive(200, 200, 200);
   sun = new Planet(40, 0, 0, textureSun);
@@ -23,7 +26,7 @@ void setup() {
   sun.createMoons(3, 2);
   myPlanet = sun.children[0];
   myPlanet.setTexture(tex_earth);
-  myPlanet.createAsteroids(20, 0.4);
+  myPlanet.createAsteroids(5, satellite);
   myPlanet.hasLight = true;
   myPlanet.showLine = true;
   myPlanet.speed = 0.001;
@@ -32,8 +35,8 @@ void setup() {
 
 void draw() {
   background(0);
-  //ambientLight(50, 50, 50);
-  pointLight(200, 200, 200, 0, 0, 0);
+  lightSpecular(200, 200, 200);
+  pointLight(255, 255, 255, 0, 0, 0);
   sun.show();
   sun.orbit();
   myPlanet.orbit();

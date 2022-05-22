@@ -6,10 +6,9 @@ class Asteroid {
   float speed;
   PVector v;
 
-  Asteroid(float scale, float distance, float speed, PShape shape) {
+  Asteroid(float distance, float speed, PShape shape) {
     v = PVector.random3D();
     this.shape = shape;
-    shape.scale(scale);
     this.distance = distance;
     v.mult(distance);
     this.speed = speed;
@@ -22,10 +21,10 @@ class Asteroid {
     PVector v2 = new PVector(1, 0, 1);
     PVector p = v.cross(v2);
     rotate(fi, p.x, p.y, p.z);
-
+    shininess(0);
+    specular(0);
     noStroke();
     translate(v.x, v.y, v.z);
-    shininess(0.1);
     shape(shape);
     popMatrix();
   }
