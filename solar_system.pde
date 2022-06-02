@@ -6,11 +6,16 @@ PImage[] textures = new PImage[4];
 PImage tex_earth;
 PImage textureSun;
 PShape satellite;
-PeasyCam cam;
+//PeasyCam cam;
+MyCamera cam;
+
+float timer = 0.0;
 
 void setup() {
-  size(800, 600, P3D);
-  cam = new PeasyCam(this, 500);
+  size(1200, 800, P3D);
+  //cam = new PeasyCam(this, 500);
+  //camera(width/2.0, height/2.0, (height/2.0) / tan(PI*30.0 / 180.0), width/2.0, height/2.0, 0, 0, 1, 0);
+  cam = new MyCamera(new PVector(500, 500, 0), new PVector(0, 0, 0));
   textureSun = loadImage("data/texture_sun.jpg");
   textures[0] = loadImage("data/texture_planet_1.png");
   textures[1] = loadImage("data/texture_planet_2.png");
@@ -34,10 +39,38 @@ void setup() {
 }
 
 void draw() {
+  if (key == CODED) {
+    if (keyCode == UP) {
+      cam.moveForward();
+    }
+    if (keyCode == DOWN) {
+      cam.moveBackward(); 
+    }
+    if (keyCode == RIGHT) {
+      cam.yawRight(); 
+    }
+  }
+  cam.look();
+  cam.update();
+
   background(0);
+  ambient(30);
+  //camera((width/2.0) + timer, height/2.0, (height/2.0) / tan(PI*30.0 / 180.0), 0, 0, 0, 0, 1, 0);
+  lights();
   lightSpecular(200, 200, 200);
   pointLight(255, 255, 255, 0, 0, 0);
   sun.show();
-  sun.orbit();
-  myPlanet.orbit();
+  drawPlane();
+  //sun.orbit();
+  //myPlanet.orbit();
+}
+
+void drawPlane() {
+  beginShape();
+  fill(0, 0, 50);
+  vertex(-500, -200, 500);
+  vertex(-500, -200, -500);
+  vertex( 500, -200, -500);
+  vertex( 500, -200, 500);
+  endShape(CLOSE);
 }

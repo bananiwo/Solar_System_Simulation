@@ -21,7 +21,7 @@ class Planet { //<>//
     fi = random(TWO_PI);
     noStroke();
     noFill();
-    shininess(random(0, 1.0));
+    shininess(random(10, 40));
     specular(random(0, 255));
     globe = createShape(SPHERE, radius);
     globe.setTexture(texture);
