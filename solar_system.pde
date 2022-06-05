@@ -19,7 +19,11 @@ void setup() {
   //pCam = new PeasyCam(this, 50);
   //popMatrix();
 //  camera(width/2.0, height/2.0, (height/2.0) / tan(PI*30.0 / 180.0), width/2.0, height/2.0, 0, 0, 1, 0);
-  spaceship = loadShape("data/spaceShip.obj");
+  spaceship = loadShape("data/boat/obj/boat.obj");
+  //PImage img = loadImage("data/spaceShip_LP_DefaultMaterial_AlbedoTransparency.png");
+  //spaceship.setTexture(img);
+  spaceship.rotateX(radians(90));
+  //spaceship.rotateZ(radians(45));
   cam = new MyCamera(new PVector(500, 500, 500), new PVector(0, 0, 0), spaceship);
   textureSun = loadImage("data/texture_sun.jpg");
   textures[0] = loadImage("data/texture_planet_1.png");
@@ -29,7 +33,6 @@ void setup() {
   tex_earth = loadImage("data/texture_earth.jpg");
   satellite = loadShape("data/Satellite.obj");
   satellite.scale(0.7);
-  
 
   emissive(200, 200, 200);
   sun = new Planet(40, 0, 0, textureSun);
@@ -43,35 +46,11 @@ void setup() {
   myPlanet.speed = 0.001;
   noStroke();
 }
-
-void keyPressed() {
-  if (key != CODED && keyCode == 'W' || key == CODED && keyCode == UP){
-    cam.speed = 0.5f;
-  }
-  if (key != CODED && keyCode == 'S' || key == CODED && keyCode == DOWN)
-    cam.speed = -0.5f;
-  if (key != CODED && keyCode == 'A' || key == CODED && keyCode == LEFT)
-    cam.yawAngle = 0.5;
-  if (key != CODED && keyCode == 'D' || key == CODED && keyCode == RIGHT)
-    cam.yawAngle = -0.5f;
-} //<>//
-
-void keyReleased() {
-  if (key != CODED && keyCode == 'W' || key == CODED && keyCode == UP
-    || key != CODED && keyCode == 'S' || key == CODED && keyCode == DOWN) {
-    cam.speed = 0.0f;
-  } 
-  else if (key != CODED && keyCode == 'A' || key == CODED && keyCode == LEFT
-    || key != CODED && keyCode == 'D' || key == CODED && keyCode == RIGHT) {
-    cam.yawAngle = 0.0f;
-  }
-}
-
+ //<>//
 void draw() {
   background(0);
   cam.update();
   ambient(30);
-  //camera((width/2.0) + timer, height/2.0, (height/2.0) / tan(PI*30.0 / 180.0), 0, 0, 0, 0, 1, 0);
   lights();
   lightSpecular(200, 200, 200);
   pointLight(255, 255, 255, 0, 0, 0);
@@ -89,4 +68,27 @@ void drawPlane() {
   vertex( 500, -200, -500);
   vertex( 500, -200, 500);
   endShape(CLOSE);
+}
+
+void keyPressed() {
+  if (key != CODED && keyCode == 'W' || key == CODED && keyCode == UP){
+    cam.speed = 5.5f;
+  }
+  if (key != CODED && keyCode == 'S' || key == CODED && keyCode == DOWN)
+    cam.speed = -5.5f;
+  if (key != CODED && keyCode == 'A' || key == CODED && keyCode == LEFT)
+    cam.yawAngle = 0.5;
+  if (key != CODED && keyCode == 'D' || key == CODED && keyCode == RIGHT)
+    cam.yawAngle = -0.5f;
+}
+
+void keyReleased() {
+  if (key != CODED && keyCode == 'W' || key == CODED && keyCode == UP
+    || key != CODED && keyCode == 'S' || key == CODED && keyCode == DOWN) {
+    cam.speed = 0.0f;
+  } 
+  else if (key != CODED && keyCode == 'A' || key == CODED && keyCode == LEFT
+    || key != CODED && keyCode == 'D' || key == CODED && keyCode == RIGHT) {
+    cam.yawAngle = 0.0f;
+  }
 }

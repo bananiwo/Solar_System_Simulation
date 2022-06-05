@@ -1,4 +1,4 @@
-import peasy.*;
+import peasy.*; //<>// //<>//
 
 class MyCamera {
   PVector pos; // position of camera
@@ -8,7 +8,7 @@ class MyCamera {
   PVector right;
   float yawAngle = 0.0f;
   PShape ship;
-
+  float timer = 0;
 
   MyCamera(PVector pos, PVector lookPos, PShape ship) {
     this.pos = pos;
@@ -17,22 +17,20 @@ class MyCamera {
     up = new PVector(1, 1, -forward.x/forward.z); // perpendicular to forward
     float x = forward.y * up.z - forward.z * up.y;
     float y = forward.x * up.z - forward.z * up.x;
-    float z = forward.x * up.y - forward.y * up.x; 
+    float z = forward.x * up.y - forward.y * up.x;
     right = new PVector(x, y, z);
   }
 
   void update() {
-    println(yawAngle);
-    //roll(yawAngle);
-    pos.add(PVector.mult(forward, speed)); //<>//
-   
-    camera(pos.x, pos.y, pos.z, forward.x, forward.y, forward.z, up.x, up.y, up.z);
+    pos.add(PVector.mult(forward, speed));
     pushMatrix();
-    float distanceFromCamera = 0;
-    translate(forward.x * distanceFromCamera, forward.y * distanceFromCamera, forward.z * distanceFromCamera);
-    //scale(1);
+    translate(pos.x, pos.y, pos.z);
+    //PVector offsetH = PVector.mult(forward, -200);
+    PVector offsetV = PVector.mult(up, 800);
+    //PVector offset = PVector.add(offsetH, offsetV);
+    camera(-300, -150, 0, forward.x, forward.y, forward.z, up.x, up.y, up.z);
+    //camera(offsetV.x, offsetV.y, offsetV.z, forward.x, forward.y, forward.z, up.x, up.y, up.z);
     shape(ship);
-
     popMatrix();
   }
 
