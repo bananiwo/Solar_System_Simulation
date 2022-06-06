@@ -1,4 +1,4 @@
-import peasy.*;
+import peasy.*; //<>//
 
 Planet sun;
 Planet myPlanet;
@@ -7,18 +7,18 @@ PImage tex_earth;
 PImage textureSun;
 PShape satellite;
 PShape spaceship;
-//PeasyCam pCam;
+PeasyCam pCam;
 MyCamera cam;
 
 float timer = 0.0;
 
 void setup() {
   size(1200, 800, P3D);
-  //pushMatrix();
-  //translate(500, 500, 500);
-  //pCam = new PeasyCam(this, 50);
-  //popMatrix();
-//  camera(width/2.0, height/2.0, (height/2.0) / tan(PI*30.0 / 180.0), width/2.0, height/2.0, 0, 0, 1, 0);
+  pushMatrix();
+  translate(500, 500, 500);
+  pCam = new PeasyCam(this, 50);
+  popMatrix();
+  //  camera(width/2.0, height/2.0, (height/2.0) / tan(PI*30.0 / 180.0), width/2.0, height/2.0, 0, 0, 1, 0);
   spaceship = loadShape("data/boat/obj/boat.obj");
   //PImage img = loadImage("data/spaceShip_LP_DefaultMaterial_AlbedoTransparency.png");
   //spaceship.setTexture(img);
@@ -46,16 +46,18 @@ void setup() {
   myPlanet.speed = 0.001;
   noStroke();
 }
- //<>//
+//<>//
 void draw() {
+
   background(0);
+    drawPlane();
   cam.update();
   ambient(30);
   lights();
   lightSpecular(200, 200, 200);
   pointLight(255, 255, 255, 0, 0, 0);
   //sun.show();
-  drawPlane();
+
   //sun.orbit();
   //myPlanet.orbit();
 }
@@ -71,7 +73,7 @@ void drawPlane() {
 }
 
 void keyPressed() {
-  if (key != CODED && keyCode == 'W' || key == CODED && keyCode == UP){
+  if (key != CODED && keyCode == 'W' || key == CODED && keyCode == UP) {
     cam.speed = 5.5f;
   }
   if (key != CODED && keyCode == 'S' || key == CODED && keyCode == DOWN)
@@ -86,8 +88,7 @@ void keyReleased() {
   if (key != CODED && keyCode == 'W' || key == CODED && keyCode == UP
     || key != CODED && keyCode == 'S' || key == CODED && keyCode == DOWN) {
     cam.speed = 0.0f;
-  } 
-  else if (key != CODED && keyCode == 'A' || key == CODED && keyCode == LEFT
+  } else if (key != CODED && keyCode == 'A' || key == CODED && keyCode == LEFT
     || key != CODED && keyCode == 'D' || key == CODED && keyCode == RIGHT) {
     cam.yawAngle = 0.0f;
   }

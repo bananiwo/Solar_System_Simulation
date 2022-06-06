@@ -1,4 +1,4 @@
-import peasy.*; //<>// //<>//
+import peasy.*; //<>// //<>// //<>// //<>//
 
 class MyCamera {
   PVector pos; // position of camera
@@ -28,7 +28,7 @@ class MyCamera {
     //PVector offsetH = PVector.mult(forward, -200);
     PVector offsetV = PVector.mult(up, 800);
     //PVector offset = PVector.add(offsetH, offsetV);
-    camera(-300, -150, 0, forward.x, forward.y, forward.z, up.x, up.y, up.z);
+    //camera(-300, -150, 0, forward.x, forward.y, forward.z, up.x, up.y, up.z);
     //camera(offsetV.x, offsetV.y, offsetV.z, forward.x, forward.y, forward.z, up.x, up.y, up.z);
     shape(ship);
     popMatrix();
