@@ -1,5 +1,4 @@
-import peasy.*; //<>// //<>//
-
+ //<>//
 class MyCamera {
   PVector pos; // position of camera
   float speed = 0.0f;
@@ -13,12 +12,26 @@ class MyCamera {
   MyCamera(PVector pos, PVector lookPos, PShape ship) {
     this.pos = pos;
     this.ship = ship;
+    pushMatrix();
+    translate(pos.x, pos.y, pos.z);
+    sphere(30);
+    popMatrix();
+    
+    // produce 3 perpendicular unit vectors, with 'forward' being from pos to lookPos
     forward = lookPos.sub(pos).normalize();
-    up = new PVector(1, 1, -forward.x/forward.z); // perpendicular to forward
-    float x = forward.y * up.z - forward.z * up.y;
-    float y = forward.x * up.z - forward.z * up.x;
-    float z = forward.x * up.y - forward.y * up.x;
-    right = new PVector(x, y, z);
+    float upX = 1;
+    float upY = 1;
+    up = new PVector(upX, upY, (-forward.x*upX - forward.y*upY)/forward.z).normalize(); // perpendicular to forward
+    float rightX = forward.y * up.z - forward.z * up.y;
+    float rightY = forward.x * up.z - forward.z * up.x;
+    float rightZ = forward.x * up.y - forward.y * up.x;
+    right = new PVector(rightX, -rightY, rightZ).normalize();
+    
+    print("\nforward and up", forward.dot(up));
+    print("\nup and right", up.dot(right));
+    print("\nright and forward", right.dot(forward));
+    
+    //camera(pos.x, pos.y, pos.z, forward.x, forward.y, forward.z, up.x, up.y, up.z);
   }
 
   void update() {
@@ -28,10 +41,20 @@ class MyCamera {
     //PVector offsetH = PVector.mult(forward, -200);
     PVector offsetV = PVector.mult(up, 800);
     //PVector offset = PVector.add(offsetH, offsetV);
-    camera(-300, -150, 0, forward.x, forward.y, forward.z, up.x, up.y, up.z);
+    //camera(-300, -150, 0, forward.x, forward.y, forward.z, up.x, up.y, up.z);
     //camera(offsetV.x, offsetV.y, offsetV.z, forward.x, forward.y, forward.z, up.x, up.y, up.z);
-    shape(ship);
+    drawAxies();
+    //shape(ship);
     popMatrix();
+  }
+
+  void drawAxies() {
+    stroke(255, 0, 0);
+    float lineLen = 150;
+    line(0, 0, 0, forward.x * lineLen, forward.y * lineLen, forward.z * lineLen);
+    line(0, 0, 0, up.x * lineLen, up.y * lineLen, up.z * lineLen);
+    line(0, 0, 0, right.x * lineLen, right.y * lineLen, right.z * lineLen);
+    noStroke();
   }
 
   void pitch(float theta) {

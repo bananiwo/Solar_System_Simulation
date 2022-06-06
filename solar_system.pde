@@ -1,4 +1,4 @@
-import peasy.*;
+import peasy.*; //<>//
 
 Planet sun;
 Planet myPlanet;
@@ -7,7 +7,7 @@ PImage tex_earth;
 PImage textureSun;
 PShape satellite;
 PShape spaceship;
-//PeasyCam pCam;
+PeasyCam pCam;
 MyCamera cam;
 
 float timer = 0.0;
@@ -16,14 +16,9 @@ void setup() {
   size(1200, 800, P3D);
   //pushMatrix();
   //translate(500, 500, 500);
-  //pCam = new PeasyCam(this, 50);
+  pCam = new PeasyCam(this, 10);
   //popMatrix();
-//  camera(width/2.0, height/2.0, (height/2.0) / tan(PI*30.0 / 180.0), width/2.0, height/2.0, 0, 0, 1, 0);
   spaceship = loadShape("data/boat/obj/boat.obj");
-  //PImage img = loadImage("data/spaceShip_LP_DefaultMaterial_AlbedoTransparency.png");
-  //spaceship.setTexture(img);
-  spaceship.rotateX(radians(90));
-  //spaceship.rotateZ(radians(45));
   cam = new MyCamera(new PVector(500, 500, 500), new PVector(0, 0, 0), spaceship);
   textureSun = loadImage("data/texture_sun.jpg");
   textures[0] = loadImage("data/texture_planet_1.png");
@@ -46,16 +41,17 @@ void setup() {
   myPlanet.speed = 0.001;
   noStroke();
 }
- //<>//
+
 void draw() {
   background(0);
+  drawPlane();
   cam.update();
   ambient(30);
   lights();
   lightSpecular(200, 200, 200);
   pointLight(255, 255, 255, 0, 0, 0);
   //sun.show();
-  drawPlane();
+
   //sun.orbit();
   //myPlanet.orbit();
 }
@@ -71,9 +67,8 @@ void drawPlane() {
 }
 
 void keyPressed() {
-  if (key != CODED && keyCode == 'W' || key == CODED && keyCode == UP){
+  if (key != CODED && keyCode == 'W' || key == CODED && keyCode == UP)
     cam.speed = 5.5f;
-  }
   if (key != CODED && keyCode == 'S' || key == CODED && keyCode == DOWN)
     cam.speed = -5.5f;
   if (key != CODED && keyCode == 'A' || key == CODED && keyCode == LEFT)
@@ -86,8 +81,7 @@ void keyReleased() {
   if (key != CODED && keyCode == 'W' || key == CODED && keyCode == UP
     || key != CODED && keyCode == 'S' || key == CODED && keyCode == DOWN) {
     cam.speed = 0.0f;
-  } 
-  else if (key != CODED && keyCode == 'A' || key == CODED && keyCode == LEFT
+  } else if (key != CODED && keyCode == 'A' || key == CODED && keyCode == LEFT
     || key != CODED && keyCode == 'D' || key == CODED && keyCode == RIGHT) {
     cam.yawAngle = 0.0f;
   }
