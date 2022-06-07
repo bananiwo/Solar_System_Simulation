@@ -1,204 +1,98 @@
-/***************************************************************************
- * Quaternion class written by BlackAxe / Kolor aka Laurent Schmalen in 1997
- * Translated to Java(with Processing) by RangerMauve in 2012
- * this class is freeware. you are fully allowed to use this class in non-
- * commercial products. Use in commercial environment is strictly prohibited
- */
-
 public class Quaternion {
-  public  float W, X, Y, Z;      // components of a quaternion
+  
+public float x, y, z, w;
+public Quaternion() {
+    x = y = z = 0;
+    w = 1;
+}
 
-  // default constructor
-  public Quaternion() {
-    W = 1.0;
-    X = 0.0;
-    Y = 0.0;
-    Z = 0.0;
-  }
+public Quaternion(float _x, float _y, float _z, float _w) {
+    x = _x;
+    y = _y;
+    z = _z;
+    w = _w;
+}
 
-  // initialized constructor
+public Quaternion(float angle, PVector axis) {
+    setAngleAxis(angle, axis);
+}
 
-  public Quaternion(float w, float x, float y, float z) {
-    W = w;
-    X = x;
-    Y = y;
-    Z = z;
-  }
+public Quaternion get() {
+    return new Quaternion(x, y, z, w);
+}
 
-  // quaternion multiplication
-  public Quaternion mult (Quaternion q) {
-    float w = W*q.W - (X*q.X + Y*q.Y + Z*q.Z);
+public Boolean equal(Quaternion q) {
+    return x == q.x && y == q.y && z == q.z && w == q.w;
+}
 
-    float x = W*q.X + q.W*X + Y*q.Z - Z*q.Y;
-    float y = W*q.Y + q.W*Y + Z*q.X - X*q.Z;
-    float z = W*q.Z + q.W*Z + X*q.Y - Y*q.X;
+public void set(float _x, float _y, float _z, float _w) {
+    x = _x;
+    y = _y;
+    z = _z;
+    w = _w;
+}
 
-    W = w;
-    X = x;
-    Y = y;
-    Z = z;
-    return this;
-  }
+public void setAngleAxis(float angle, PVector axis) {
+    axis.normalize();
+    float hcos = cos(angle / 2);
+    float hsin = sin(angle / 2);
+    w = hcos;
+    x = axis.x * hsin;
+    y = axis.y * hsin;
+    z = axis.z * hsin;
+}
 
-  // conjugates the quaternion
-  public Quaternion conjugate () {
-    X = -X;
-    Y = -Y;
-    Z = -Z;
-    return this;
-  }
+public Quaternion conj() {
+    Quaternion ret = new Quaternion();
+    ret.x = -x;
+    ret.y = -y;
+    ret.z = -z;
+    ret.w = w;
+    return ret;
+}
 
-  // inverts the quaternion
-  public Quaternion reciprical () {
-    float norme = sqrt(W*W + X*X + Y*Y + Z*Z);
-    if (norme == 0.0)
-      norme = 1.0;
+public Quaternion mult(float r) {
+    Quaternion ret = new Quaternion();
+    ret.x = x * r;
+    ret.y = y * r;
+    ret.z = z * r;
+    ret.w = w * w;
+    return ret;
+}
 
-    float recip = 1.0 / norme;
-
-    W =  W * recip;
-    X = -X * recip;
-    Y = -Y * recip;
-    Z = -Z * recip;
-
-    return this;
-  }
-
-  // sets to unit quaternion
-  public Quaternion normalize() {
-    float norme = sqrt(W*W + X*X + Y*Y + Z*Z);
-    if (norme == 0.0)
-    {
-      W = 1.0; 
-      X = Y = Z = 0.0;
-    }
-    else
-    {
-      float recip = 1.0/norme;
-
-      W *= recip;
-      X *= recip;
-      Y *= recip;
-      Z *= recip;
-    }
-    return this;
-  }
-
-  // Makes quaternion from axis
-  public Quaternion fromAxis(float Angle, float x, float y, float z) { 
-    float omega, s, c;
-    int i;
-
-    s = sqrt(x*x + y*y + z*z);
-
-    if (abs(s) > Float.MIN_VALUE)
-    {
-      c = 1.0/s;
-
-      x *= c;
-      y *= c;
-      z *= c;
-
-      omega = -0.5f * Angle;
-      s = (float)sin(omega);
-
-      X = s*x;
-      Y = s*y;
-      Z = s*z;
-      W = (float)cos(omega);
-    }
-    else
-    {
-      X = Y = 0.0f;
-      Z = 0.0f;
-      W = 1.0f;
-    }
-    normalize();
-    return this;
-  }
-
-  public Quaternion fromAxis(float Angle, PVector axis) {
-    return this.fromAxis(Angle, axis.x, axis.y, axis.z);
-  }
-
-  // Rotates towards other quaternion
-  public void slerp(Quaternion a, Quaternion b, float t)
-  {
-    float omega, cosom, sinom, sclp, sclq;
-    int i;
+public Quaternion mult(Quaternion q) {
+    Quaternion ret = new Quaternion();
+    ret.x = q.w*x + q.x*w + q.y*z - q.z*y;
+    ret.y = q.w*y - q.x*z + q.y*w + q.z*x;
+    ret.z = q.w*z + q.x*y - q.y*x + q.z*w;
+    ret.w = q.w*w - q.x*x - q.y*y - q.z*z;
+    return ret;
+}
 
 
-    cosom = a.X*b.X + a.Y*b.Y + a.Z*b.Z + a.W*b.W;
+public PVector mult(PVector v) {
+  float px = (1 - 2 * y * y - 2 * z * z) * v.x +
+             (2 * x * y - 2 * z * w) * v.y +
+             (2 * x * z + 2 * y * w) * v.z;
+             
+  float py = (2 * x * y + 2 * z * w) * v.x +
+             (1 - 2 * x * x - 2 * z * z) * v.y +
+             (2 * y * z - 2 * x * w) * v.z;
+             
+  float pz = (2 * x * z - 2 * y * w) * v.x +
+             (2 * y * z + 2 * x * w) * v.y +
+             (1 - 2 * x * x - 2 * y * y) * v.z;
 
+    return new PVector(px, py, pz);
+}
 
-    if ((1.0f+cosom) > Float.MIN_VALUE)
-    {
-      if ((1.0f-cosom) > Float.MIN_VALUE)
-      {
-        omega = acos(cosom);
-        sinom = sin(omega);
-        sclp = sin((1.0f-t)*omega) / sinom;
-        sclq = sin(t*omega) / sinom;
-      }
-      else
-      {
-        sclp = 1.0f - t;
-        sclq = t;
-      }
+public void normalize(){
+  float len = w*w + x*x + y*y + z*z;
+  float factor = 1.0f / sqrt(len);
+  x *= factor;
+  y *= factor;
+  z *= factor;
+  w *= factor;
+}
 
-      X = sclp*a.X + sclq*b.X;
-      Y = sclp*a.Y + sclq*b.Y;
-      Z = sclp*a.Z + sclq*b.Z;
-      W = sclp*a.W + sclq*b.W;
-    }
-    else
-    {
-      X =-a.Y;
-      Y = a.X;
-      Z =-a.W;
-      W = a.Z;
-
-      sclp = sin((1.0f-t) * PI * 0.5);
-      sclq = sin(t * PI * 0.5);
-
-      X = sclp*a.X + sclq*b.X;
-      Y = sclp*a.Y + sclq*b.Y;
-      Z = sclp*a.Z + sclq*b.Z;
-    }
-  }
-
-  public Quaternion exp()
-  {                               
-    float Mul;
-    float Length = sqrt(X*X + Y*Y + Z*Z);
-
-    if (Length > 1.0e-4)
-      Mul = sin(Length)/Length;
-    else
-      Mul = 1.0;
-
-    W = cos(Length);
-
-    X *= Mul;
-    Y *= Mul;
-    Z *= Mul; 
-
-    return this;
-  }
-
-  public Quaternion log()
-  {
-    float Length;
-
-    Length = sqrt(X*X + Y*Y + Z*Z);
-    Length = atan(Length/W);
-
-    W = 0.0;
-
-    X *= Length;
-    Y *= Length;
-    Z *= Length;
-
-    return this;
-  }
-};
+}

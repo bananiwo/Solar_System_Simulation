@@ -14,12 +14,9 @@ float timer = 0.0;
 
 void setup() {
   size(1200, 800, P3D);
-  //pushMatrix();
-  //translate(500, 500, 500);
-  pCam = new PeasyCam(this, 10);
-  //popMatrix();
+  pCam = new PeasyCam(this, 100);
   spaceship = loadShape("data/boat/obj/boat.obj");
-  cam = new MyCamera(new PVector(500, 500, 500), new PVector(0, 0, 0), spaceship);
+  cam = new MyCamera(new PVector(10, 10, 10), new PVector(0, 0, 0), spaceship);
   textureSun = loadImage("data/texture_sun.jpg");
   textures[0] = loadImage("data/texture_planet_1.png");
   textures[1] = loadImage("data/texture_planet_2.png");
@@ -73,9 +70,9 @@ void keyPressed() {
   if (key != CODED && keyCode == 'S' || key == CODED && keyCode == DOWN)
     cam.speed = -5.5f;
   if (key != CODED && keyCode == 'A' || key == CODED && keyCode == LEFT)
-    cam.yawAngle = 0.5;
+    cam.rollAngle = 0.5;
   if (key != CODED && keyCode == 'D' || key == CODED && keyCode == RIGHT)
-    cam.yawAngle = -0.5f;
+    cam.rollAngle = -0.5f;
 }
 
 void keyReleased() {
@@ -84,6 +81,6 @@ void keyReleased() {
     cam.speed = 0.0f;
   } else if (key != CODED && keyCode == 'A' || key == CODED && keyCode == LEFT
     || key != CODED && keyCode == 'D' || key == CODED && keyCode == RIGHT) {
-    cam.yawAngle = 0.0f;
+    cam.rollAngle = 0.0f;
   }
 }
