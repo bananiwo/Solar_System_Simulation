@@ -1,4 +1,3 @@
- //<>//
 class MyCamera {
   PVector pos; // position of camera
   float speed = 0.0f;
