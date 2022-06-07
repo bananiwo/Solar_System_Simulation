@@ -64,6 +64,13 @@ void drawPlane() {
   endShape(CLOSE);
 }
 
+void mouseMoved() {
+  float adjust = 0.1;
+  cam.pitchAngle = (mouseY - pmouseY) * adjust;
+  //cam.yawAngle = (mouseX - pmouseX) * adjust;
+  print("\nX = ", (mouseX - pmouseX) * adjust, "  Y = ", (mouseY - pmouseY) * adjust);
+}
+
 void keyPressed() {
   if (key != CODED && keyCode == 'W' || key == CODED && keyCode == UP)
     cam.speed = 5.5f;
@@ -73,6 +80,11 @@ void keyPressed() {
     cam.rollAngle = 0.5;
   if (key != CODED && keyCode == 'D' || key == CODED && keyCode == RIGHT)
     cam.rollAngle = -0.5f;
+
+  if (key != CODED && keyCode == 'N')
+    cam.yawAngle = 0.5f;
+  if (key != CODED && keyCode == 'M')
+    cam.pitchAngle = 0.5f;
 }
 
 void keyReleased() {
@@ -82,5 +94,10 @@ void keyReleased() {
   } else if (key != CODED && keyCode == 'A' || key == CODED && keyCode == LEFT
     || key != CODED && keyCode == 'D' || key == CODED && keyCode == RIGHT) {
     cam.rollAngle = 0.0f;
+  } else if (key != CODED && keyCode == 'N') {
+    cam.yawAngle = 0;
   }
+  //} else if (key != CODED && keyCode == 'M') {
+  //  cam.pitchAngle = 0;
+  //}
 }
