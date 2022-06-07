@@ -6,17 +6,17 @@ PImage[] textures = new PImage[4];
 PImage tex_earth;
 PImage textureSun;
 PShape satellite;
-PShape spaceship;
-PeasyCam pCam;
-MyCamera cam;
+PShape spaceshipModel;
+//Camera cam;
+SpaceShip ship;
 
 float timer = 0.0;
 
 void setup() {
   size(1200, 800, P3D);
-  pCam = new PeasyCam(this, 100);
-  spaceship = loadShape("data/boat/obj/boat.obj");
-  cam = new MyCamera(new PVector(10, 10, 10), new PVector(0, 0, 0), spaceship);
+  //camera(100, 100, 100, 0, 0, 0, 1, 0, 0);
+  spaceshipModel = loadShape("data/boat/obj/boat.obj");
+  ship = new SpaceShip(new PVector(10, 10, 10), new PVector(0, 0, 0), spaceshipModel);
   textureSun = loadImage("data/texture_sun.jpg");
   textures[0] = loadImage("data/texture_planet_1.png");
   textures[1] = loadImage("data/texture_planet_2.png");
@@ -43,7 +43,14 @@ void draw() {
 
   background(0);
   drawPlane();
-  cam.update();
+  PVector[] cameraPos= ship.update();
+  camera(cameraPos[0].x, cameraPos[0].y, cameraPos[0].z,
+         cameraPos[1].x, cameraPos[1].y, cameraPos[1].z,
+         cameraPos[2].x, cameraPos[2].y, cameraPos[2].z);
+  //println(cameraPos[0]);
+  //println(cameraPos[1]);
+  //println(cameraPos[2]);
+  
   ambient(30);
   lights();
   lightSpecular(200, 200, 200);
@@ -65,39 +72,39 @@ void drawPlane() {
 }
 
 void mouseMoved() {
-  float adjust = 0.1;
-  cam.pitchAngle = (mouseY - pmouseY) * adjust;
-  //cam.yawAngle = (mouseX - pmouseX) * adjust;
-  print("\nX = ", (mouseX - pmouseX) * adjust, "  Y = ", (mouseY - pmouseY) * adjust);
+  float speedAdjustment = 1;
+  ship.pitchAngle = (mouseY - pmouseY) * speedAdjustment;
+  ship.yawAngle = (mouseX - pmouseX) * speedAdjustment;
+  //print("\nX = ", (mouseX - pmouseX) * speedAdjustment, "  Y = ", (mouseY - pmouseY) * speedAdjustment);
 }
 
 void keyPressed() {
   if (key != CODED && keyCode == 'W' || key == CODED && keyCode == UP)
-    cam.speed = 5.5f;
+    ship.speed = 5.5f;
   if (key != CODED && keyCode == 'S' || key == CODED && keyCode == DOWN)
-    cam.speed = -5.5f;
+    ship.speed = -5.5f;
   if (key != CODED && keyCode == 'A' || key == CODED && keyCode == LEFT)
-    cam.rollAngle = 0.5;
+    ship.rollAngle = 0.5;
   if (key != CODED && keyCode == 'D' || key == CODED && keyCode == RIGHT)
-    cam.rollAngle = -0.5f;
+    ship.rollAngle = -0.5f;
 
   if (key != CODED && keyCode == 'N')
-    cam.yawAngle = 0.5f;
+    ship.yawAngle = 0.5f;
   if (key != CODED && keyCode == 'M')
-    cam.pitchAngle = 0.5f;
+    ship.pitchAngle = 0.5f;
 }
 
 void keyReleased() {
   if (key != CODED && keyCode == 'W' || key == CODED && keyCode == UP
     || key != CODED && keyCode == 'S' || key == CODED && keyCode == DOWN) {
-    cam.speed = 0.0f;
+    ship.speed = 0.0f;
   } else if (key != CODED && keyCode == 'A' || key == CODED && keyCode == LEFT
     || key != CODED && keyCode == 'D' || key == CODED && keyCode == RIGHT) {
-    cam.rollAngle = 0.0f;
-  } else if (key != CODED && keyCode == 'N') {
-    cam.yawAngle = 0;
+    ship.rollAngle = 0.0f;
+    //} else if (key != CODED && keyCode == 'N') {
+    //  cam.yawAngle = 0;
+    //}
+    //} else if (key != CODED && keyCode == 'M') {
+    //  cam.pitchAngle = 0;
   }
-  //} else if (key != CODED && keyCode == 'M') {
-  //  cam.pitchAngle = 0;
-  //}
 }

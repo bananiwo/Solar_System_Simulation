@@ -1,4 +1,4 @@
-class MyCamera { //<>//
+class SpaceShip { //<>//
   PVector pos; // position of camera
   float speed = 0.0f;
   PVector up;
@@ -10,7 +10,8 @@ class MyCamera { //<>//
   PShape ship;
   float timer = 0;
 
-  MyCamera(PVector pos, PVector lookPos, PShape ship) {
+
+  SpaceShip(PVector pos, PVector lookPos, PShape ship) {
     this.pos = pos;
     this.ship = ship;
     pushMatrix();
@@ -30,10 +31,11 @@ class MyCamera { //<>//
     //camera(pos.x, pos.y, pos.z, forward.x, forward.y, forward.z, up.x, up.y, up.z);
   }
 
-  void update() {
+  PVector[] update() {
     timer += 0.1;
     pos.add(PVector.mult(forward, speed));
     pushMatrix();
+
     translate(pos.x, pos.y, pos.z);
     roll(rollAngle);
     yaw(yawAngle);
@@ -41,15 +43,18 @@ class MyCamera { //<>//
     yawAngle = 0;
     pitchAngle = 0;
 
-
-    //PVector offsetH = PVector.mult(forward, -200);
-    PVector offsetV = PVector.mult(up, 800);
-    //PVector offset = PVector.add(offsetH, offsetV);
-    //camera(-300, -150, 0, forward.x, forward.y, forward.z, up.x, up.y, up.z);
-    //camera(offsetV.x, offsetV.y, offsetV.z, forward.x, forward.y, forward.z, up.x, up.y, up.z);
     drawAxies();
+
+    PVector[] cameraPos = new PVector[3];
+    cameraPos[0] = new PVector(pos.x, pos.y, pos.z);
+    cameraPos[1] = new PVector(forward.x-pos.x, forward.y-pos.y, forward.z-pos.z);
+    //cameraPos[1] = new PVector(forward.x, forward.y, forward.z);
+    //cameraPos[2] = new PVector(up.x-pos.x, up.y-pos.y, up.z-pos.z);
+    cameraPos[2] = new PVector(up.x, up.y, up.z);
+
     //shape(ship);
     popMatrix();
+    return cameraPos;
   }
 
   void drawAxies() {
